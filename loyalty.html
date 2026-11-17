@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T1NKIETTE — Programme Fidélité & Récompenses</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-left"><a href="index.html" class="logo">T1NKIETTE</a></div>
+    <div class="header-right">
+      <button class="btn-sommaire" onclick="openSommaireDrawer()">Sommaire ☰</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">💎 Programme de Fidélité T1NKIETTE</h2>
+
+    <!-- Encart Synthèse & Progression -->
+    <div class="card" style="background:var(--text-primary); color:#fff; margin-bottom:24px;">
+      <h3 style="font-size:18px; margin-bottom:6px;">Solde Actuel : <span id="loyalty-points-display" style="color:#FFD60A;">0</span> points</h3>
+      <p style="font-size:13px; opacity:0.85; margin-bottom:16px;">Barème : 1€ dépensé = 2 points • 300 points = 10€ de réduction en bon d'achat.</p>
+      <div style="background:rgba(255,255,255,0.2); height:10px; border-radius:5px; overflow:hidden; margin-bottom:8px;">
+        <div id="loyalty-progress-bar" style="background:#FFD60A; height:100%; width:0%;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; opacity:0.8;">
+        <span>0 pts</span>
+        <span>Palier 300 pts (10€)</span>
+        <span>Palier 600 pts (Cadeau Lux)</span>
+      </div>
+    </div>
+
+    <!-- Boutique de Récompenses (Produits échangeables contre points) -->
+    <h3 class="section-title">🎁 Récompenses Disponibles contre Points</h3>
+    <div class="product-grid" id="reward-products-grid" style="margin-bottom:40px;">
+      <div class="card">
+        <h3>Bon d'achat 10€</h3>
+        <p style="font-size:13px; color:var(--text-secondary); margin:6px 0;">Valable sur tout le catalogue.</p>
+        <div style="font-weight:700; color:var(--accent-color); margin-bottom:12px;">300 points</div>
+        <button class="btn" onclick="redeemReward(300, 'Bon d\'achat 10€')">Échanger</button>
+      </div>
+      <div class="card">
+        <h3>Dry Mousse 45μ (3.5G)</h3>
+        <p style="font-size:13px; color:var(--text-secondary); margin:6px 0;">Offert par ESC Farm 🇪🇸.</p>
+        <div style="font-weight:700; color:var(--accent-color); margin-bottom:12px;">500 points</div>
+        <button class="btn" onclick="redeemReward(500, 'Dry Mousse 3.5G')">Échanger</button>
+      </div>
+      <div class="card">
+        <h3>Pack Conso Complet</h3>
+        <p style="font-size:13px; color:var(--text-secondary); margin:6px 0;">Grinder + Plateau + Balance.</p>
+        <div style="font-weight:700; color:var(--accent-color); margin-bottom:12px;">800 points</div>
+        <button class="btn" onclick="redeemReward(800, 'Pack Conso Complet')">Échanger</button>
+      </div>
+    </div>
+
+    <!-- Historique des points -->
+    <h3 class="section-title">📜 Historique des Points</h3>
+    <div class="card" id="loyalty-history-list" style="margin-bottom:40px;">
+      <div class="stock-row"><span>Commande #CMD-482910 (+240 pts)</span><span style="color:var(--success-color); font-weight:600;">+240 pts</span></div>
+    </div>
+
+  </main>
+
+  <div id="sommaire-drawer" class="drawer-backdrop">
+    <div class="drawer-panel">
+      <div class="drawer-header"><h2>Sommaire T1NKIETTE</h2><button class="close-btn" onclick="closeSommaireDrawer()">✕</button></div>
+      <div class="drawer-links" id="drawer-links-container"></div>
+    </div>
+  </div>
+
+  <nav class="app-footer">
+    <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Accueil</span></a>
+    <a href="catalog.html" class="nav-item"><span class="nav-icon">📦</span><span>Catalogue</span></a>
+    <a href="news.html" class="nav-item"><span class="nav-icon">📰</span><span>Nouvelles</span></a>
+    <a href="community.html" class="nav-item"><span class="nav-icon">👥</span><span>Communauté</span></a>
+    <a href="account.html" class="nav-item active"><span class="nav-icon">👤</span><span>Compte</span></a>
+  </nav>
+
+  <script src="js/store-data.js"></script>
+  <script src="js/app-home.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const pts = parseInt(localStorage.getItem("t1nkiette_points") || "120");
+      document.getElementById("loyalty-points-display").innerText = pts;
+      const progress = Math.min((pts / 300) * 100, 100);
+      document.getElementById("loyalty-progress-bar").style.width = progress + "%";
+    });
+    function redeemReward(cost, name) {
+      let pts = parseInt(localStorage.getItem("t1nkiette_points") || "120");
+      if (pts >= cost) {
+        pts -= cost;
+        localStorage.setItem("t1nkiette_points", pts);
+        alert(`Félicitations ! Vous avez échangé ${cost} points contre : ${name}.`);
+        location.reload();
+      } else {
+        alert("Points insuffisants pour cette récompense.");
+      }
+    }
+  </script>
+</body>
+</html>
