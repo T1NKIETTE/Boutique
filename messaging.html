@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T1NKIETTE — Messagerie Multi-Services</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+  <style>
+    .messaging-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .chat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      background: var(--bg-secondary);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-left"><a href="index.html" class="logo">T1NKIETTE</a></div>
+    <div class="header-right">
+      <button class="btn-sommaire" onclick="openSommaireDrawer()">Sommaire ☰</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">💬 Centre de Messagerie T1NKIETTE</h2>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:24px;">Communiquez en direct avec nos différents services spécialisés.</p>
+
+    <!-- 4 ENCARTS MESSAGERIES -->
+    <div class="messaging-grid">
+      
+      <!-- Service Client -->
+      <div class="chat-box">
+        <h3>👤 Service Client</h3>
+        <div class="chat-messages" id="chat-msg-client">
+          <div style="color:var(--text-secondary);">Bienvenue au service client. Comment pouvons-nous vous aider ?</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-client" placeholder="Votre message..." style="flex:1; padding:8px; border:1px solid var(--border-color); border-radius:6px; font-size:12px;">
+          <button class="btn" style="padding:8px 12px; font-size:12px;" onclick="sendMsg('client')">Envoyer</button>
+        </div>
+      </div>
+
+      <!-- Service Assistance -->
+      <div class="chat-box">
+        <h3>🎧 Service Assistance</h3>
+        <div class="chat-messages" id="chat-msg-assistance">
+          <div style="color:var(--text-secondary);">Support technique et questions sur le site.</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-assistance" placeholder="Votre message..." style="flex:1; padding:8px; border:1px solid var(--border-color); border-radius:6px; font-size:12px;">
+          <button class="btn" style="padding:8px 12px; font-size:12px;" onclick="sendMsg('assistance')">Envoyer</button>
+        </div>
+      </div>
+
+      <!-- SAV -->
+      <div class="chat-box">
+        <h3>🛠️ Service Après-Vente</h3>
+        <div class="chat-messages" id="chat-msg-sav">
+          <div style="color:var(--text-secondary);">Réclamations, retours et suivi colis.</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-sav" placeholder="Votre message..." style="flex:1; padding:8px; border:1px solid var(--border-color); border-radius:6px; font-size:12px;">
+          <button class="btn" style="padding:8px 12px; font-size:12px;" onclick="sendMsg('sav')">Envoyer</button>
+        </div>
+      </div>
+
+      <!-- Service Professionnel -->
+      <div class="chat-box">
+        <h3>🤝 Service Professionnel</h3>
+        <div class="chat-messages" id="chat-msg-pro">
+          <div style="color:var(--text-secondary);">Partenariats et tarifs en gros.</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="input-pro" placeholder="Votre message..." style="flex:1; padding:8px; border:1px solid var(--border-color); border-radius:6px; font-size:12px;">
+          <button class="btn" style="padding:8px 12px; font-size:12px;" onclick="sendMsg('pro')">Envoyer</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="sommaire-drawer" class="drawer-backdrop">
+    <div class="drawer-panel">
+      <div class="drawer-header"><h2>Sommaire T1NKIETTE</h2><button class="close-btn" onclick="closeSommaireDrawer()">✕</button></div>
+      <div class="drawer-links" id="drawer-links-container"></div>
+    </div>
+  </div>
+
+  <nav class="app-footer">
+    <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Accueil</span></a>
+    <a href="catalog.html" class="nav-item"><span class="nav-icon">📦</span><span>Catalogue</span></a>
+    <a href="news.html" class="nav-item"><span class="nav-icon">📰</span><span>Nouvelles</span></a>
+    <a href="community.html" class="nav-item"><span class="nav-icon">👥</span><span>Communauté</span></a>
+    <a href="account.html" class="nav-item"><span class="nav-icon">👤</span><span>Compte</span></a>
+  </nav>
+
+  <script src="js/store-data.js"></script>
+  <script src="js/app-home.js"></script>
+  <script>
+    function sendMsg(service) {
+      const input = document.getElementById(`input-${service}`);
+      const box = document.getElementById(`chat-msg-${service}`);
+      const text = input.value.trim();
+      if (!text) return;
+
+      box.innerHTML += `<div style="margin:6px 0; text-align:right;"><strong>Moi :</strong> ${text}</div>`;
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+
+      setTimeout(() => {
+        box.innerHTML += `<div style="margin:6px 0; color:var(--accent-color);"><strong>${service.toUpperCase()} :</strong> Message bien reçu, un conseiller va vous répondre.</div>`;
+        box.scrollTop = box.scrollHeight;
+      }, 800);
+    }
+  </script>
+</body>
+</html>

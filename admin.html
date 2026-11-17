@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T1NKIETTE — Espace Gérant (Back-Office)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ÉCRAN DE CONNEXION ADMIN -->
+  <div id="admin-login-screen" class="modal-backdrop" style="display:flex;">
+    <div class="modal-card">
+      <h2>🔐 Accès Espace Gérant T1NKIETTE</h2>
+      <p style="font-size:13px; color:var(--text-secondary); margin:8px 0 16px;">Veuillez saisir votre clé d'authentification administrateur.</p>
+      <input type="password" id="admin-key-input" placeholder="Clé secrète admin..." style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:8px; margin-bottom:14px;">
+      <button class="btn" style="width:100%; padding:12px;" onclick="checkAdminLogin()">Connexion Back-Office</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD ADMIN PRINCIPAL -->
+  <div id="admin-dashboard-screen" style="display:none;">
+    <header class="app-header">
+      <div class="header-left">
+        <span class="logo">T1NKIETTE — Back-Office Gérant</span>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-outline" onclick="window.location.href='index.html'">🌐 Voir le site client</button>
+        <button class="btn" style="background:var(--danger-color);" onclick="adminLogout()">Déconnexion</button>
+      </div>
+    </header>
+
+    <main class="container" style="padding-top:30px; padding-bottom:50px;">
+      
+      <!-- NAVIGATION ONGLETS ADMIN -->
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" onclick="switchAdminTab('finances')">📊 Dashboard Financier</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('orders')">📦 Gestion Commandes</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('catalog')">✏️ CRUD Catalogue & Stocks</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('content')">🛠️ Encarts, Promos & Arrivages</button>
+      </div>
+
+      <!-- ONGLET 1 : FINANCES & BÉNÉFICES -->
+      <div id="tab-finances" class="admin-tab-content">
+        <h2 class="section-title">Dashboard Financier & Rentabilité</h2>
+        
+        <div class="metrics-grid">
+          <div class="card metric-card">
+            <span style="font-size:12px; color:var(--text-secondary);">Chiffre d'Affaires Brut (CA)</span>
+            <div id="metric-ca" style="font-size:24px; font-weight:700; margin-top:6px;">0.00 €</div>
+          </div>
+          <div class="card metric-card">
+            <span style="font-size:12px; color:var(--text-secondary);">Investissement Stock (COGS)</span>
+            <div id="metric-cogs" style="font-size:24px; font-weight:700; color:var(--warning-color); margin-top:6px;">0.00 €</div>
+          </div>
+          <div class="card metric-card">
+            <span style="font-size:12px; color:var(--text-secondary);">Bénéfice Net Réel</span>
+            <div id="metric-benefit" style="font-size:24px; font-weight:700; color:var(--success-color); margin-top:6px;">0.00 €</div>
+          </div>
+          <div class="card metric-card">
+            <span style="font-size:12px; color:var(--text-secondary);">Marge Moyenne</span>
+            <div id="metric-margin" style="font-size:24px; font-weight:700; color:var(--accent-color); margin-top:6px;">0 %</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:24px;">
+          <h3>Détail par Mode de Réception & Paiement</h3>
+          <div id="financial-breakdown-box" style="margin-top:12px; font-size:14px; color:var(--text-secondary);">
+            Aucune donnée de vente enregistrée pour le moment.
+          </div>
+        </div>
+      </div>
+
+      <!-- ONGLET 2 : GESTION COMMANDES -->
+      <div id="tab-orders" class="admin-tab-content" style="display:none;">
+        <h2 class="section-title">Gestion Avancée des Commandes</h2>
+        <div id="admin-orders-container"></div>
+      </div>
+
+      <!-- ONGLET 3 : CRUD CATALOGUE & STOCKS -->
+      <div id="tab-catalog" class="admin-tab-content" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 class="section-title" style="margin:0;">Gestion du Catalogue & des Stocks (🟥🟧🟨🟩🟦🟪)</h2>
+          <button class="btn" onclick="openNewProductModal()">+ Ajouter un produit</button>
+        </div>
+        <div id="admin-catalog-container"></div>
+      </div>
+
+      <!-- ONGLET 4 : ENCARTS, PROMOS & ARRIVAGES -->
+      <div id="tab-content" class="admin-tab-content" style="display:none;">
+        <h2 class="section-title">Éditeur d'Encarts, Promos & Fidélité</h2>
+        <div class="card" style="margin-bottom:20px;">
+          <h3>Modifier les Paramètres du Programme Fidélité</h3>
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            <input type="number" id="admin-loyalty-ratio" placeholder="Ratio (ex: 2 pts par euro)" style="padding:8px; border:1px solid var(--border-color); border-radius:8px; width:220px;">
+            <button class="btn" onclick="saveLoyaltySettings()">Mettre à jour</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Gestion des Arrivages Futurs</h3>
+          <p style="font-size:13px; color:var(--text-secondary); margin:6px 0 12px;">Modifier la jauge temporelle et les stocks prévus.</p>
+          <div id="admin-arrivals-box"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/store-data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
